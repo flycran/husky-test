@@ -23,7 +23,6 @@ async function getPushCommits(): Promise<CommitInfo[]> {
       const range = isNewBranch ? localSha : `${remoteSha}..${localSha}`
 
       try {
-        const SEP = '||__SEP__||'
         const logs = execSync(
           `git log ${range} --format="%H%x1f%h%x1f%s%x1f%b%x1e"`
         )
