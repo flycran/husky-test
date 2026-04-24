@@ -25,7 +25,7 @@ async function getPushCommits(): Promise<CommitInfo[]> {
       try {
         const SEP = '||__SEP__||'
         const logs = execSync(
-          `git log ${range} --format="%H\n%h\n%s\n%b"`
+          `git log ${range} --format="%H%n%h%n%s%n%b"`
         )
           .toString()
           .trim()
