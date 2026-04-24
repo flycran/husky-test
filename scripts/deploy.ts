@@ -7,9 +7,6 @@ interface CommitInfo {
   shortHash: string
   subject: string
   body: string
-  authorName: string
-  authorEmail: string
-  date: string
 }
 
 async function getPushCommits(): Promise<CommitInfo[]> {
@@ -28,7 +25,7 @@ async function getPushCommits(): Promise<CommitInfo[]> {
       try {
         const SEP = '||__SEP__||'
         const logs = execSync(
-          `git log ${range} --format="%H${SEP}%h${SEP}%s${SEP}%b${SEP}%an${SEP}%ae${SEP}%ci"`
+          `git log ${range} --format="%H\n%h\n%s\n%b"`
         )
           .toString()
           .trim()
@@ -39,15 +36,13 @@ async function getPushCommits(): Promise<CommitInfo[]> {
           .split('\n')
           .filter(Boolean)
           .map((entry) => {
-            const [hash, shortHash, subject, body, authorName, authorEmail, date] = entry.split(SEP)
+            const [hash, shortHash, subject] = entry.split('\n')
+            const body = entry.split('\n').slice(2).join('\n')
             return {
               hash,
               shortHash,
               subject,
-              body: body?.trim() ?? '',
-              authorName,
-              authorEmail,
-              date,
+              body,
             }
           })
 
