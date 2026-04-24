@@ -25,7 +25,7 @@ async function getPushCommits(): Promise<CommitInfo[]> {
       try {
         const SEP = '||__SEP__||'
         const logs = execSync(
-          `git log ${range} --format="%H%n%h%n%s%n%b"`
+          `git log ${range} --format="%H%x1f%h%x1f%s%x1f%b%x1e"`
         )
           .toString()
           .trim()
@@ -33,11 +33,11 @@ async function getPushCommits(): Promise<CommitInfo[]> {
         if (!logs) return
 
         const parsed = logs
-          .split('\n')
+          .split('\x1e')
           .filter(Boolean)
           .map((entry) => {
-            const [hash, shortHash, subject] = entry.split('\n')
-            const body = entry.split('\n').slice(2).join('\n')
+            const [hash, shortHash, subject, body] = entry.trim().split('\x1f')
+
             return {
               hash,
               shortHash,
